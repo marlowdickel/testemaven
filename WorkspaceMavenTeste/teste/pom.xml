@@ -12,14 +12,16 @@
   <build>
   	<finalName>MeuTesteMaven</finalName>
   	<plugins>
+  	<pluginManagement>
   		<plugin>
   		<artifactId>maven-compiler-plugin</artifactId>
   		<version>3.0</version>
   		<configuration>
-  			<source>15</source>
-  			<target>15</target>
+  			<source>1.8</source>
+  			<target>1.8</target>
   		</configuration>
   		</plugin>
+  	</pluginManagement>
   	</plugins>
   </build>
   <dependencies>
