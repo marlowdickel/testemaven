@@ -13,38 +13,72 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import br.com.coldigogeladeiras.bd.Conexao;
-import br.com.coldigogeladeiras.jdbc.JDBCCompraDAO;
-import br.com.coldigogeladeiras.modelo.Compra;
-import br.com.coldigogeladeiras.modelo.ProdutoCompra;
+import br.teste.bd.Conexao;
+import br.teste.dao.GenericDAO;
+import br.teste.modelo.Compra;
+import br.teste.modelo.Produto;
+import br.teste.modelo.ProdutoCompra;
+import br.teste.modelo.id;
 
 @Path("compra")
 public class CompraRest extends UtilRest{
 
+	private GenericDAO<Compra> daoCompra = new GenericDAO<Compra>();
+	private GenericDAO<Produto> daoProduto = new GenericDAO<Produto>();
+	private GenericDAO<ProdutoCompra> daoProdutoCompra = new GenericDAO<ProdutoCompra>();
+	
 	@POST
 	@Path("/inserir")
 	@Consumes("application/*")
 	public Response inserir(String compraParam){
-		
+
 		try{
+			//possibilidade: insere compra com merge, e depois coloca produtos nela - não deu...
+			//possibilidade 2:insere compra com merge, coloca o id dela nos produtos, depois do for usa o merge de novo - não deu: Unable to find br.teste.modelo.ProdutoCompra with id br.teste.modelo.ProdutoCompraKey@a1e
+			//possibilidade 3: limpa produto e compra do ProdutoCompra antes de inserir um por um no BD
+			Gson gSon=  new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
-			Compra compra = new Gson().fromJson(compraParam, Compra.class);
-						
-			Conexao conec = new Conexao();
-			Connection conexao = conec.abrirConexao();
-
-			JDBCCompraDAO jdbcCompra= new JDBCCompraDAO(conexao);
+			Compra compra = gSon.fromJson(compraParam, Compra.class);
+			List<ProdutoCompra> produtosComprados = compra.getProdutos();
+			System.out.println("compra recebida: "+new Gson().toJson(compra));			
+			compra.setProdutos(new ArrayList<ProdutoCompra>());
+			System.out.println("compra recebida s/ produtos: "+new Gson().toJson(compra));	
+			System.out.println("produtos: "+new Gson().toJson(produtosComprados));	
 			
-			boolean retorno = jdbcCompra.inserir(compra);
 			
-			String msg = "Erro ao cadastrar compra.";
-			if(retorno){
-				msg = "Compra cadastrada com sucesso!";
+			Compra compraManaged = daoCompra.alterar(compra);
+			Object idCompra = Conexao.getPrimaryKey(compraManaged);
+			System.out.println("Id inserido = "+(int) idCompra);
+			for (ProdutoCompra produtoCompra: produtosComprados) {
+				
+				compraManaged = daoCompra.buscarPorId(Compra.class, compraManaged.getId());
+				produtoCompra.setCompra(compraManaged);
+				Produto produtoManaged = daoProduto.buscarPorId(Produto.class, produtoCompra.getProduto().getId());
+				produtoCompra.setProduto(produtoManaged);
+				
+				//produtoCompra.setId(new id(produtoManaged.getId(),compraManaged.getId()));
+				
+				System.out.println("n:n final = "+new Gson().toJson(produtoCompra));			
+				//P1
+				daoProdutoCompra.inserir(produtoCompra);
+				//P2
+				//compraManaged.getProdutos().add(produtoCompra);
+				//P3 inicio
+				/*
+				produtoCompra.setCompra(null);
+				produtoCompra.setProduto(null);
+				daoProdutoCompra.inserir(produtoCompra);
+				*/
+				//p3 fim
+				
 			}
-
-			conec.fecharConexao();
+			//P2
+			//compraManaged = daoCompra.alterar(compraManaged);
+			
+			String msg = "Compra cadastrada com sucesso!";
 
 			return this.buildResponse(msg);
 			
@@ -57,25 +91,44 @@ public class CompraRest extends UtilRest{
 	
 	@GET
 	@Path("/relatorio")
-	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response gerarRelatorio(){
-		
 		try{
-			List<JsonObject> listaCompras = new ArrayList<JsonObject>();
-
-			Conexao conec = new Conexao();
-			Connection conexao = conec.abrirConexao();
-			JDBCCompraDAO jdbcCompra = new JDBCCompraDAO(conexao);
-			listaCompras = jdbcCompra.gerarRelatorio();
-			conec.fecharConexao();	
-			String json = new Gson().toJson(listaCompras);
-			System.out.println(json);
-			return this.buildResponse(json);
+			List<Compra> listaCompras = daoCompra.buscarTodos(Compra.class);
+			/*for (Object item : listaCompras) {
+				((Compra) item).getProdutos()
+				setCategoria(((Compra) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");
+				//((Produto) item).setCategoria(((Produto) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");			
+			}*/
+			int cont = 0;
+			for (Compra compra : listaCompras) {
+				cont++;
+				System.out.println("compra "+cont+":"+compra);
+				System.out.println(compra.getId());
+				System.out.println(compra.getFornecedor());
+				System.out.println(compra.getData());
+				int contproduto = 0;
+				for (ProdutoCompra produtocompra: compra.getProdutos()) {
+					contproduto++;
+					Produto produto = produtocompra.getProduto();
+					System.out.println("produto "+contproduto+":"+produtocompra.getProduto());
+					System.out.println(produto.getId());
+					System.out.println(produto.getMarca().getNome());
+					System.out.println(produto.getCategoria());
+					System.out.println(produto.getModelo());
+					System.out.println(produto.getCapacidade());
+					System.out.println(produto.getValor());
+				}
+			}
+			
+			
+			return this.buildResponse(listaCompras);
 		}catch(Exception e){
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
 		}
+	
+		
 	}
 	
 }

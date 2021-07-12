@@ -1,27 +1,57 @@
 package br.teste.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-public class ProdutoCompra implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+@Entity
+@Table(name="produtocomprado")
+public class ProdutoCompra implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name = "produtocomprado_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	
-	private int idCompra;
-	private int idProduto;
+	@ManyToOne
+	@JoinColumn(name="compra_id")
+	private Compra compra;
+	
+	@ManyToOne
+	@JoinColumn(name="produto_id")
+	private Produto produto;
+	
 	private int quantidade;
-	private float valor;
+	private BigDecimal valor;
 	
-	public int getIdCompra() {
-		return idCompra;
+	public int getId() {
+		return id;
 	}
-	public void setIdCompra(int idCompra) {
-		this.idCompra = idCompra;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public int getIdProduto() {
-		return idProduto;
+	public Compra getCompra() {
+		return compra;
 	}
-	public void setIdProduto(int idProduto) {
-		this.idProduto = idProduto;
+	public void setCompra(Compra compra) {
+		this.compra = compra;
+	}
+	public Produto getProduto() {
+		return produto;
+	}
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
 	public int getQuantidade() {
 		return quantidade;
@@ -29,10 +59,10 @@ public class ProdutoCompra implements Serializable {
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
-	public float getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
-	public void setValor(float valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 	

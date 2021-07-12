@@ -57,8 +57,9 @@ $(document).ready(function() {
 	COLDIGO.produto.cadastrar = function(){
 		
 		var produto = new Object();
+		produto.marca = new Object();
 		produto.categoria = document.frmAddProduto.categoria.value;
-		produto.marcaId = document.frmAddProduto.marcaId.value;
+		produto.marca.id = document.frmAddProduto.marcaId.value;
 		produto.modelo = document.frmAddProduto.modelo.value;
 		produto.capacidade = document.frmAddProduto.capacidade.value;
 		produto.valor = document.frmAddProduto.valor.value;
@@ -89,24 +90,18 @@ $(document).ready(function() {
 	
 	//Busca no BD e exibe na página os produtos que atendam à solicitação do usuário 
 	COLDIGO.produto.buscar = function(){
-		alert("entrou busca prod.");
 				
 		var valorBusca = $("#campoBuscaProduto").val();
-		alert("antes ajax");
 		$.ajax({
 			type: "GET",
-			url: COLDIGO.PATH + "produto/buscar",
-			data: "valorBusca="+valorBusca,
+			url: COLDIGO.PATH + "produto/buscarAvancado",
+			data: "modelo="+valorBusca,
 			success: function(dados){
-				alert("sucesso ajax v2");
-				//dados = JSON.parse(dados);
-				alert(dados);
 				
 				$("#listaProdutos").html(COLDIGO.produto.exibir(dados));
 				
 			},
 			error: function(info){
-				alert("erro ajax");
 				COLDIGO.exibirAviso("Erro ao consultar os contatos: "+ info.status + " - " + info.statusText);
 			}
 		});
@@ -115,7 +110,6 @@ $(document).ready(function() {
 	
 	//Transforma os dados dos produtos recebidos do servidor em uma tabela HTML 
 	COLDIGO.produto.exibir = function(listaDeProdutos) {
-		alert("entrou exibir");
 				
 		var tabela = "<table>" +
 		"<tr>" +
@@ -173,10 +167,9 @@ $(document).ready(function() {
 	COLDIGO.produto.exibirEdicao = function(id){
 		$.ajax({
 			type:"GET",
-			url: COLDIGO.PATH + "produto/buscarPorId",
-			data: "id="+id,
+			url: COLDIGO.PATH + "produto/buscar/"+id,
 			success: function(produto){
-				
+				console.log(produto);
 				document.frmEditaProduto.idProduto.value = produto.id;
 				document.frmEditaProduto.modelo.value = produto.modelo;
 				document.frmEditaProduto.capacidade.value = produto.capacidade;
@@ -191,7 +184,7 @@ $(document).ready(function() {
 					}	
 			    }
 				
-				COLDIGO.produto.carregarMarcas(produto.marcaId);
+				COLDIGO.produto.carregarMarcas(produto.marca.id);
 				
 				var modalEditaProduto = {
 					title: "Editar Produto",
@@ -224,9 +217,10 @@ $(document).ready(function() {
 	COLDIGO.produto.editar = function(){
 
 		var produto = new Object();
+		produto.marca = new Object();
 		produto.id = document.frmEditaProduto.idProduto.value;
 		produto.categoria = document.frmEditaProduto.categoria.value;
-		produto.marcaId = document.frmEditaProduto.marcaId.value;
+		produto.marca.id = document.frmEditaProduto.marcaId.value;
 		produto.modelo = document.frmEditaProduto.modelo.value;
 		produto.capacidade = document.frmEditaProduto.capacidade.value;
 		produto.valor = document.frmEditaProduto.valor.value;

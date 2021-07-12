@@ -12,16 +12,27 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.teste.bd.Conexao;
+import br.teste.dao.GenericDAO;
 import br.teste.modelo.Marca;
+import br.teste.modelo.Produto;
 
 @Path("marca")
 public class MarcaRest extends UtilRest{
+	
+	private GenericDAO<Marca> daoGenerico = new GenericDAO<Marca>(); 
 	
 	@GET
 	@Path("/buscar")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscar(){
-		
+		try{
+			List<Marca> listaMarcas = daoGenerico.buscarTodos(Marca.class);
+			return this.buildResponse(listaMarcas);
+		}catch(Exception e){
+			e.printStackTrace();
+			return this.buildErrorResponse(e.getMessage());
+		}
+		/*
 		try{	
 			EntityManager em = new Conexao().getEntityManager();
 			em.getTransaction().begin();
@@ -31,12 +42,12 @@ public class MarcaRest extends UtilRest{
 			Connection conexao = conec.abrirConexao();
 			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
 			listaMarcas = jdbcMarca.buscar();
-			conec.fecharConexao();*/	
+			conec.fecharConexao();	
 			return this.buildResponse(listaMarcas);
 		}catch(Exception e){
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
-		}
+		}*/
 		
 	}
 

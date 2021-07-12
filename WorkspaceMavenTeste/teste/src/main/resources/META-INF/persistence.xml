@@ -5,16 +5,21 @@
   <provider>org.hibernate.ejb.HibernatePersistence</provider>
   <class>br.teste.modelo.Marca</class>
   <class>br.teste.modelo.Produto</class>
+  <class>br.teste.modelo.Compra</class>
+  <class>br.teste.modelo.ProdutoCompra</class>
+  <class>br.teste.modelo.id</class>
+  <!-- <class>br.teste.modelo.ProdutoCompra</class>
+  <class>br.teste.modelo.ProdutoCompraKey</class> -->
 
   <properties>
    <property name="hibernate.connection.username" value="root" />
    <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver" />
    <property name="hibernate.connection.password" value="root" />
-   <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/bdcoldigo" />
+   <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/bdcoldigojpav2" />
    <property name="hibernate.show_sql" value="true" />
    
    <!-- Permite operacoes ddls pelo jpa -->
-   <property name="hibernate.hbm2ddl.auto" value="update" />
+   <property name="hibernate.hbm2ddl.auto" value="validate" />
 
   </properties>
 

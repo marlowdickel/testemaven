@@ -1,6 +1,9 @@
 package br.teste.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,31 +13,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="produtos")
+@Table
 public class Produto implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 	
 	private String categoria;
 	
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	@JoinColumn(name = "marcas_id")
+	@JoinColumn(name = "marca_id")
 	private Marca marca;
 	
 	private String modelo;
 	
 	private int capacidade;
 	
-	private float valor;
-
+	private BigDecimal valor;
+	/*
+	@OneToMany(mappedBy = "produto")
+	private List<ProdutoCompra> produtosComprados = new ArrayList<ProdutoCompra>();
+*/
 	public int getId() {
 		return id;
 	}
@@ -65,11 +72,18 @@ public class Produto implements Serializable {
 	public void setCapacidade(int capacidade) {
 		this.capacidade = capacidade;
 	}
-	public float getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
-	public void setValor(float valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+	/*
+	public List<ProdutoCompra> getProdutosComprados() {
+		return produtosComprados;
+	}
+	public void setProdutosComprados(List<ProdutoCompra> produtosComprados) {
+		this.produtosComprados = produtosComprados;
+	}*/
 }
 

@@ -4,6 +4,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class UtilRest {
 	/*
@@ -21,7 +22,9 @@ public class UtilRest {
 			 * em seu corpo o objeto valorResposta (que consiste no 
 			 * objeto result convertido para JSON).
 			 */
-			String valorResposta = new Gson().toJson(result);
+			Gson gSon=  new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+			String valorResposta = gSon.toJson(result);
 			
 			return Response.ok(valorResposta).build();
 		} catch (Exception ex) {

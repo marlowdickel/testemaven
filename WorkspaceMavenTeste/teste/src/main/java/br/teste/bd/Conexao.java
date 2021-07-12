@@ -10,6 +10,28 @@ import javax.persistence.Persistence;
 public class Conexao {
 	
 	//nome da unidade de persistencia definia no persistence.xml
+	private static final String UNIT_NAME = "testeJPA";
+		
+	private static EntityManagerFactory factory = null;
+	
+	public static EntityManager getEntityManager() {
+		EntityManager em = null;
+		try {
+			if (factory == null) {
+				factory = Persistence.createEntityManagerFactory(UNIT_NAME);
+			}
+			em = factory.createEntityManager();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return em;
+	}
+	
+	public static Object getPrimaryKey(Object entidade){
+		return factory.getPersistenceUnitUtil().getIdentifier(entidade);
+	}
+	/*
+	//nome da unidade de persistencia definia no persistence.xml
 	 private static final String UNIT_NAME = "testeJPA";
 	 
 	 private EntityManagerFactory emf = null;
