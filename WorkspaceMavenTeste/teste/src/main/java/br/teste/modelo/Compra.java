@@ -43,7 +43,7 @@ public class Compra implements Serializable {
 	@Column
 	private String fornecedor;
 	
-	@OneToMany(mappedBy = "compra", cascade = CascadeType.ALL) //atributo que vincula essa tabela à outra
+	@OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, fetch = FetchType.EAGER) //atributo que vincula essa tabela à outra
 	private List<ProdutoCompra> produtos = new ArrayList<ProdutoCompra>();
 
 	public int getId() {

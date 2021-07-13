@@ -32,7 +32,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bdcoldigojpav2`.`produto` (
   `id` INT(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
-  `categoria` TINYINT(1) UNSIGNED NOT NULL,
+  `categoria` varchar(11) NOT NULL,
   `modelo` VARCHAR(45) NOT NULL,
   `capacidade` INT(4) UNSIGNED NOT NULL,
   `valor` DECIMAL(7,2) UNSIGNED NOT NULL,
