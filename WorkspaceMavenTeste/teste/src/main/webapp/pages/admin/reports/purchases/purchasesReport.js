@@ -9,11 +9,13 @@ $(document).ready(function() {
 			type: "GET",
 			url: COLDIGO.PATH + "compra/relatorio",
 			success: function(dados){
+				console.log(dados);
 				
-				dados = JSON.parse(dados);
+				//dados = JSON.parse(dados);
 				$("#listaCompras").html(COLDIGO.relatorioCompra.exibir(dados));			
 			},
 			error: function(info){
+				console.log(info);
 				COLDIGO.exibirAviso("Erro ao consultar as compras: "+ info.status + " - " + info.statusText);
 			}
 		});
@@ -57,16 +59,16 @@ $(document).ready(function() {
 				
 				//Converte os dados de cada produto dessa compra em objeto JS 
 				//(necessário devido a conversão realizada no backend da aplicação em JDBCCompraDAO.relatorio)
-				listaDeCompras[i].produtos = JSON.parse(listaDeCompras[i].produtos)
+				//listaDeCompras[i].produtos = JSON.parse(listaDeCompras[i].produtos)
 				
 				//Para cada produto da compra
 				for (var j=0; j<listaDeCompras[i].produtos.length; j++){
-					
+					console.log(listaDeCompras[i].produtos[j]);
 					//Cria uma linha com os dados do produto
 					vendas += "<tr>" +
-							"<td>"+listaDeCompras[i].produtos[j].categoria+"</td>" +
-							"<td>"+listaDeCompras[i].produtos[j].marca+"</td>" +
-							"<td>"+listaDeCompras[i].produtos[j].modelo+"</td>" +
+							"<td>"+listaDeCompras[i].produtos[j].produto.categoria+"</td>" +
+							"<td>"+listaDeCompras[i].produtos[j].produto.marca.nome+"</td>" +
+							"<td>"+listaDeCompras[i].produtos[j].produto.modelo+"</td>" +
 							"<td>"+listaDeCompras[i].produtos[j].quantidade+"</td>" +
 							"<td>R$ "+COLDIGO.formatarDinheiro(listaDeCompras[i].produtos[j].valor)+"</td>" +
 						"</tr>"

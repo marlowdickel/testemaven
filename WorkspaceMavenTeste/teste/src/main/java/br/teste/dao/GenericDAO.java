@@ -107,5 +107,20 @@ public class GenericDAO<E> {
 		}
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<E> buscarPorJpql(String jpql){
+		
+		try{
+			List<E> lista = null;
+			em.getTransaction().begin();
+			lista = em.createQuery(jpql).getResultList();
+			em.getTransaction().commit();
+			return lista;
+		}catch(Exception e){
+			throw e; 
+		}
+		
+	}
 
 }

@@ -94,35 +94,17 @@ public class CompraRest extends UtilRest{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response gerarRelatorio(){
 		try{
+			
 			List<Compra> listaCompras = daoCompra.buscarTodos(Compra.class);
-			/*for (Object item : listaCompras) {
-				((Compra) item).getProdutos()
-				setCategoria(((Compra) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");
-				//((Produto) item).setCategoria(((Produto) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");			
-			}*/
-			int cont = 0;
+
 			for (Compra compra : listaCompras) {
-				cont++;
-				System.out.println("compra "+cont+":"+compra);
-				System.out.println(compra.getId());
-				System.out.println(compra.getFornecedor());
-				System.out.println(compra.getData());
-				int contproduto = 0;
 				for (ProdutoCompra produtocompra: compra.getProdutos()) {
-					contproduto++;
-					Produto produto = produtocompra.getProduto();
-					System.out.println("produto "+contproduto+":"+produtocompra.getProduto());
-					System.out.println(produto.getId());
-					System.out.println(produto.getMarca().getNome());
-					System.out.println(produto.getCategoria());
-					System.out.println(produto.getModelo());
-					System.out.println(produto.getCapacidade());
-					System.out.println(produto.getValor());
+					produtocompra.setCompra(null);
+					produtocompra.getProduto().setCategoria(produtocompra.getProduto().getCategoria().equals("1") ? "Geladeira" : "Freezer");
 				}
 			}
-			
-			
 			return this.buildResponse(listaCompras);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
