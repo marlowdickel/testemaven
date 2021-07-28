@@ -17,7 +17,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import br.teste.bd.Conexao;
+import br.teste.dao.CompraDAO;
 import br.teste.dao.GenericDAO;
+import br.teste.dao.ProdutoCompraDAO;
+import br.teste.dao.ProdutoDAO;
 import br.teste.modelo.Compra;
 import br.teste.modelo.Produto;
 import br.teste.modelo.ProdutoCompra;
@@ -26,9 +29,9 @@ import br.teste.modelo.id;
 @Path("compra")
 public class CompraRest extends UtilRest{
 
-	private GenericDAO<Compra> daoCompra = new GenericDAO<Compra>();
-	private GenericDAO<Produto> daoProduto = new GenericDAO<Produto>();
-	private GenericDAO<ProdutoCompra> daoProdutoCompra = new GenericDAO<ProdutoCompra>();
+	private CompraDAO daoCompra = new CompraDAO();
+	private ProdutoDAO daoProduto = new ProdutoDAO();
+	private ProdutoCompraDAO daoProdutoCompra = new ProdutoCompraDAO();
 	
 	@POST
 	@Path("/inserir")
@@ -54,9 +57,9 @@ public class CompraRest extends UtilRest{
 			System.out.println("Id inserido = "+(int) idCompra);
 			for (ProdutoCompra produtoCompra: produtosComprados) {
 				
-				compraManaged = daoCompra.buscarPorId(Compra.class, compraManaged.getId());
+				compraManaged = daoCompra.buscarPorId(compraManaged.getId());
 				produtoCompra.setCompra(compraManaged);
-				Produto produtoManaged = daoProduto.buscarPorId(Produto.class, produtoCompra.getProduto().getId());
+				Produto produtoManaged = daoProduto.buscarPorId(produtoCompra.getProduto().getId());
 				produtoCompra.setProduto(produtoManaged);
 				
 				//produtoCompra.setId(new id(produtoManaged.getId(),compraManaged.getId()));
@@ -98,10 +101,7 @@ public class CompraRest extends UtilRest{
 			List<Compra> listaCompras = daoCompra.buscarTodos(Compra.class);
 
 			for (Compra compra : listaCompras) {
-				for (ProdutoCompra produtocompra: compra.getProdutos()) {
-					produtocompra.setCompra(null);
-					produtocompra.getProduto().setCategoria(produtocompra.getProduto().getCategoria().equals("1") ? "Geladeira" : "Freezer");
-				}
+				compra.formatarParaExibir();
 			}
 			return this.buildResponse(listaCompras);
 			

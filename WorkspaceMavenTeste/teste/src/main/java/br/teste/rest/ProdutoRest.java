@@ -17,12 +17,13 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import br.teste.dao.GenericDAO;
+import br.teste.dao.ProdutoDAO;
 import br.teste.modelo.Produto;
 
 @Path("produto")
 public class ProdutoRest extends UtilRest{
 	
-	private GenericDAO<Produto> daoGenerico = new GenericDAO<Produto>(); 
+	private ProdutoDAO daoProduto = new ProdutoDAO(); 
 	
 	@POST
 	@Path("/inserir")
@@ -32,7 +33,7 @@ public class ProdutoRest extends UtilRest{
 		try{
 			
 			Produto produto = new Gson().fromJson(produtoParam, Produto.class);
-			daoGenerico.inserir(produto);
+			daoProduto.inserir(produto);
 			String msg = "Produto cadastrado com sucesso!";
 			
 			return this.buildResponse(msg);
@@ -50,10 +51,8 @@ public class ProdutoRest extends UtilRest{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscarTodos(){
 		try{
-			List<Produto> listaProdutos = daoGenerico.buscarTodos(Produto.class);
-			for (Object item : listaProdutos) {
-				((Produto) item).setCategoria(((Produto) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");			
-			}
+			List<Produto> listaProdutos = daoProduto.buscarTodos(Produto.class);
+
 			return this.buildResponse(listaProdutos);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -67,16 +66,10 @@ public class ProdutoRest extends UtilRest{
 	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscarAvancado(@QueryParam("modelo") String modelo){
-		System.out.println("buscarAvancado");
 		
 		try{
-			//repare que é "marca", não "marcas", pois é conforme nome da classe e não da tabela do BD
-			String condicao = "WHERE modelo LIKE '%"+modelo+"%' ORDER BY categoria ASC, marca.nome ASC, modelo ASC";
-			List<Produto> listaProdutos = daoGenerico.buscarAvancado(Produto.class, condicao);
-			//System.out.println(new Gson().toJson(lista));
-			for (Object item : listaProdutos) {
-				((Produto) item).setCategoria(((Produto) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");			
-			}
+			List<Produto> listaProdutos = daoProduto.buscarPorModelo(modelo);
+			
 			return this.buildResponse(listaProdutos);
 			
 		}catch(Exception e){
@@ -93,8 +86,8 @@ public class ProdutoRest extends UtilRest{
 		
 		try{
 			
-			Produto produto = daoGenerico.buscarPorId(Produto.class, id);
-			daoGenerico.excluir(produto);
+			Produto produto = daoProduto.buscarPorId(id);
+			daoProduto.excluir(produto);
 			String msg = "Produto excluído com sucesso!";
 			
 			return this.buildResponse(msg);
@@ -114,7 +107,7 @@ public class ProdutoRest extends UtilRest{
 		
 		try{
 			
-			Produto produto = daoGenerico.buscarPorId(Produto.class, id);
+			Produto produto = daoProduto.buscarPorId(id);
 			
 			return this.buildResponse(produto);
 		}catch(Exception e){
@@ -131,7 +124,7 @@ public class ProdutoRest extends UtilRest{
 		try{
 			Produto produto = new Gson().fromJson(produtoParam, Produto.class);
 
-			daoGenerico.alterar(produto);
+			daoProduto.alterar(produto);
 
 			String msg = "Produto alterado com sucesso!";
 			
@@ -149,9 +142,7 @@ public class ProdutoRest extends UtilRest{
 	public Response buscarParaVenda(@QueryParam("idMarca") int idMarca, @QueryParam("categoria") int categoria){
 		
 		try{
-			//repare que é "marca", não "marcas", pois é conforme nome da classe e não da tabela do BD
-			String condicao = "WHERE marca.id = '"+idMarca+"' AND categoria = '"+categoria+"' ORDER BY modelo ASC";
-			List<Produto> listaProdutos = daoGenerico.buscarAvancado(Produto.class, condicao);
+			List<Produto> listaProdutos = daoProduto.buscarParaVenda(idMarca, categoria);
 			
 			return this.buildResponse(listaProdutos);
 		}catch(Exception e){

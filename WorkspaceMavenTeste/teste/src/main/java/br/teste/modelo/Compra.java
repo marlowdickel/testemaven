@@ -72,5 +72,12 @@ public class Compra implements Serializable {
 		this.produtos = produtos;
 	}
 	
+	public void formatarParaExibir() {
+		for (ProdutoCompra produtocompra: this.getProdutos()) {
+			produtocompra.setCompra(null);
+			System.out.println("cat 1:"+produtocompra.getProduto().getCategoria());
+			produtocompra.getProduto().setCategoria(produtocompra.getProduto().getCategoria().equals("1") ? "Geladeira" : produtocompra.getProduto().getCategoria().equals("2") ? "Freezer" : produtocompra.getProduto().getCategoria());
+		}
+	}
 }
 

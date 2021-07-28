@@ -14,7 +14,9 @@ import br.teste.bd.Conexao;
 
 public class GenericDAO<E> {
 	
-	private EntityManager em = Conexao.getEntityManager();;
+	private EntityManager em = Conexao.getEntityManager();
+	
+	public Class<E> meuTipo;
 	
 	public void inserir(E entidade){
 		
@@ -46,21 +48,6 @@ public class GenericDAO<E> {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<E> buscarAvancado(Class<E> entidade, String condicao){
-		
-		try{
-			List<E> lista = null;
-			em.getTransaction().begin();
-			lista = em.createQuery("FROM "+entidade.getName()+" "+condicao).getResultList();
-			em.getTransaction().commit();
-			return lista;
-		}catch(Exception e){
-			throw e; 
-		}
-		
-	}
-	
 	
 	public void excluir(E entidade){
 		//entidade.getClass().getDeclaredAnnotations();
@@ -81,11 +68,11 @@ public class GenericDAO<E> {
 
 	}
 	
-	public E buscarPorId(Class<E> entidade, int id){
+	public E buscarPorId(int id){
 		
 		try{
 			E entidadeEncontrada = null;
-			entidadeEncontrada = (E) em.find(entidade, id);
+			entidadeEncontrada = (E) em.find(meuTipo, id);
 			return entidadeEncontrada;
 		}catch(Exception e){
 			throw e; 
@@ -108,8 +95,9 @@ public class GenericDAO<E> {
 		
 	}
 	
+	
 	@SuppressWarnings("unchecked")
-	public List<E> buscarPorJpql(String jpql){
+	protected List<E> buscarPorJpql(String jpql){
 		
 		try{
 			List<E> lista = null;
