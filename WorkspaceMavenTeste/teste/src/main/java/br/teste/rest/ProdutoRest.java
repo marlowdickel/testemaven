@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 
-import br.teste.dao.GenericDAO;
 import br.teste.dao.ProdutoDAO;
 import br.teste.modelo.Produto;
 

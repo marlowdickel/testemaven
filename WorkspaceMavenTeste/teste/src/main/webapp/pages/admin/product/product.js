@@ -62,7 +62,7 @@ $(document).ready(function() {
 		produto.marca.id = document.frmAddProduto.marcaId.value;
 		produto.modelo = document.frmAddProduto.modelo.value;
 		produto.capacidade = document.frmAddProduto.capacidade.value;
-		produto.valor = document.frmAddProduto.valor.value;
+		produto.valor = COLDIGO.dinheiroFrontToBack(document.frmAddProduto.valor.value);
 		
 		if((produto.categoria=="")||(produto.marcaId=="")||(produto.modelo=="")
 				||(produto.capacidade=="")||(produto.valor=="")){
@@ -129,7 +129,7 @@ $(document).ready(function() {
 						"<td>"+listaDeProdutos[i].marca.nome+"</td>" +
 						"<td>"+listaDeProdutos[i].modelo+"</td>" +
 						"<td>"+listaDeProdutos[i].capacidade+"</td>" +
-						"<td>R$ "+COLDIGO.formatarDinheiro(listaDeProdutos[i].valor)+"</td>" +
+						"<td>R$ "+COLDIGO.dinheiroBackToFront(listaDeProdutos[i].valor)+"</td>" +
 						"<td>" +
 							"<a onclick=\"COLDIGO.produto.exibirEdicao('"+listaDeProdutos[i].id+"')\"><img src='../../addons/images/edit.png' alt='Editar registro'></a> " +
 							"<a onclick=\"COLDIGO.produto.excluir('"+listaDeProdutos[i].id+"')\"><img src='../../addons/images/delete.png' alt='Excluir registro'></a>" +
@@ -173,7 +173,7 @@ $(document).ready(function() {
 				document.frmEditaProduto.idProduto.value = produto.id;
 				document.frmEditaProduto.modelo.value = produto.modelo;
 				document.frmEditaProduto.capacidade.value = produto.capacidade;
-				document.frmEditaProduto.valor.value = produto.valor;
+				document.frmEditaProduto.valor.value = COLDIGO.dinheiroBackToFront(produto.valor);
 				
 				var selCategoria = document.getElementById('selCategoriaEdicao');
 				for(var i=0; i < selCategoria.length; i++){
@@ -223,7 +223,7 @@ $(document).ready(function() {
 		produto.marca.id = document.frmEditaProduto.marcaId.value;
 		produto.modelo = document.frmEditaProduto.modelo.value;
 		produto.capacidade = document.frmEditaProduto.capacidade.value;
-		produto.valor = document.frmEditaProduto.valor.value;
+		produto.valor = COLDIGO.dinheiroFrontToBack(document.frmEditaProduto.valor.value);
 		
 		$.ajax({
 			type:"PUT",

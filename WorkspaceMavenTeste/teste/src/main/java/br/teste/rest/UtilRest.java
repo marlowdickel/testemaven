@@ -6,8 +6,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import br.teste.modelo.Compra;
-
 public class UtilRest {
 
 	public Response buildResponse(Object result) {

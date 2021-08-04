@@ -1,14 +1,8 @@
 package br.teste.dao;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import br.teste.bd.Conexao;
 
@@ -33,7 +27,6 @@ public class GenericDAO<E> {
 	
 	@SuppressWarnings("unchecked")
 	public List<E> buscarTodos(Class<E> entidade){
-		//System.out.println("buscando produto");
 		
 		try{
 			List<E> lista = null;
@@ -50,14 +43,8 @@ public class GenericDAO<E> {
 	
 	
 	public void excluir(E entidade){
-		//entidade.getClass().getDeclaredAnnotations();
+
 		try{
-			/*
-			Object id = Conexao.getPrimaryKey(entidade);
-			em.getTransaction().begin();
-			em.createNativeQuery("DELETE FROM "+entidade.getClass().getSimpleName().toLowerCase()+" WHERE id = "+id).executeUpdate();
-			em.getTransaction().commit();
-			*/
 			em.getTransaction().begin();
 			em.remove(entidade);
 			em.getTransaction().commit();

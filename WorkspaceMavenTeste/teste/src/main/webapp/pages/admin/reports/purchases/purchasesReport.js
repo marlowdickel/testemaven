@@ -70,7 +70,7 @@ $(document).ready(function() {
 							"<td>"+listaDeCompras[i].produtos[j].produto.marca.nome+"</td>" +
 							"<td>"+listaDeCompras[i].produtos[j].produto.modelo+"</td>" +
 							"<td>"+listaDeCompras[i].produtos[j].quantidade+"</td>" +
-							"<td>R$ "+COLDIGO.formatarDinheiro(listaDeCompras[i].produtos[j].valor)+"</td>" +
+							"<td>R$ "+COLDIGO.dinheiroBackToFront(listaDeCompras[i].produtos[j].valor)+"</td>" +
 						"</tr>"
 				}	
 

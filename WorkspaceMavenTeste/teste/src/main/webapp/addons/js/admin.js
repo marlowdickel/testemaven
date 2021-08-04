@@ -43,10 +43,14 @@ $(document).ready(function() {
 		$("#modalAviso").dialog(modal);
 	};
 	
-	//Exibe os valores financeiros no formato da moeda Real
-	COLDIGO.formatarDinheiro = function(valor){
+	//Converte os valores financeiros vindos do BD no formato da moeda Real
+	COLDIGO.dinheiroBackToFront = function(valor){
 		return valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
 	}
 	
+	//Converte os valores financeiros digitados pelo usuário no formato aceito pelo BD
+	COLDIGO.dinheiroFrontToBack = function(valor){
+		return parseFloat(valor.replace(',', '.')).toFixed(2);
+	}
 });
 

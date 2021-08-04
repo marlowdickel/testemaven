@@ -16,7 +16,7 @@ public class ProdutoDAO extends GenericDAO<Produto> {
 				String condicao = "FROM "+meuTipo.getName()+" WHERE marca.id = '"+idMarca+"' AND categoria = '"+categoria+"' ORDER BY modelo ASC";
 				List<Produto> listaProdutos = this.buscarPorJpql(condicao);
 				
-				return this.mudarCategoriaIntParaString(listaProdutos);
+				return this.categoriaIntParaString(listaProdutos);
 				
 			}catch(Exception e){
 				throw e;
@@ -29,14 +29,14 @@ public class ProdutoDAO extends GenericDAO<Produto> {
 				String condicao = "FROM "+meuTipo.getName()+" WHERE modelo LIKE '%"+modelo+"%' ORDER BY categoria ASC, marca.nome ASC, modelo ASC";
 				List<Produto> listaProdutos = this.buscarPorJpql(condicao);
 				
-				return this.mudarCategoriaIntParaString(listaProdutos);
+				return this.categoriaIntParaString(listaProdutos);
 				
 			}catch(Exception e){
 				throw e;
 			}
 	 }
 	 
-	 private List<Produto> mudarCategoriaIntParaString(List<Produto> listaProdutos){
+	 private List<Produto> categoriaIntParaString(List<Produto> listaProdutos){
 		 
 		 for (Object item : listaProdutos) {
 				((Produto) item).setCategoria(((Produto) item).getCategoria().equals("1") ? "Geladeira" : "Freezer");			
