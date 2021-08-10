@@ -1,3 +1,4 @@
+/* IGNORAR */
 package br.teste.filtro;
 
 import javax.servlet.ServletRequest;

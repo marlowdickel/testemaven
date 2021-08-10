@@ -1,41 +1,14 @@
 package br.teste.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import br.teste.bd.Conexao;
 import br.teste.modelo.Marca;
 
-public class MarcaDAO {
+//Classe DAO para gerenciamento da entidade Marca
+public class MarcaDAO extends GenericDAO<Marca>{
 	
-	private Connection conexao;
-	
-	public MarcaDAO() throws SQLException, ClassNotFoundException {
-		//conexao = new Conexao().conecta();
+	//Construtor que armazena no atributo meuTipo o tipo da classe.
+	//Usado em diversos momentos pelo GenericDAO
+	public MarcaDAO() {
+		 this.meuTipo = Marca.class; 
 	}
 	
-	public ArrayList<Marca> buscar() throws SQLException{
-		ArrayList<Marca> marcas = new ArrayList<Marca>();
-		Marca marca = null;
-		
-		PreparedStatement stmt = conexao.prepareStatement("SELECT * FROM marcas");
-		ResultSet rs = stmt.executeQuery();
-		
-		while(rs.next()) {
-			marca = new Marca();
-			
-			marca.setId(rs.getInt("id"));
-			marca.setNome(rs.getString("nome"));
-			
-			marcas.add(marca);
-		}
-		
-		this.conexao.close();
-		
-		return marcas;
-	}
-
 }

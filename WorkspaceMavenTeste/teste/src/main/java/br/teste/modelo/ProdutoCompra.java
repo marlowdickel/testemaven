@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 @Entity
 @Table(name="produtocomprado")
@@ -19,6 +17,8 @@ public class ProdutoCompra implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
+	//EM JPA, relacionamentos n:n que tenham mais campos do que as chaves estrangeiras das 2 tabelas 
+	//devem ser criados como uma tabela q tenha seu próprio ID e as chaves estrangeiras das duas entidades
 	@Id
 	@Column(name = "produtocomprado_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

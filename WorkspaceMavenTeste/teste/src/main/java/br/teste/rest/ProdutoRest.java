@@ -24,23 +24,37 @@ public class ProdutoRest extends UtilRest{
 	
 	private ProdutoDAO daoProduto = new ProdutoDAO(); 
 	
+	@Override
+	protected void fechaConexao() {
+		daoProduto.fechaConexao();		
+	}
+	
 	@POST
 	@Path("/inserir")
 	@Consumes("application/*")
 	public Response inserir(String produtoParam){
-		
+		//Cria uma referência para armazenar o retorno que esse método deve dar
+		Response retorno = null;
 		try{
-			
+			//recebe o produto cadastrado em um objeto
 			Produto produto = new Gson().fromJson(produtoParam, Produto.class);
+			//insere o produto no BD
 			daoProduto.inserir(produto);
 			String msg = "Produto cadastrado com sucesso!";
 			
-			return this.buildResponse(msg);
+			retorno =  this.buildResponse(msg);
 
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
+		//Retorna a Response
+		return retorno;
+		
 		
 	}
 	
@@ -49,14 +63,22 @@ public class ProdutoRest extends UtilRest{
 	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscarTodos(){
+		Response retorno = null;
 		try{
-			List<Produto> listaProdutos = daoProduto.buscarTodos(Produto.class);
+			List<Produto> listaProdutos = daoProduto.buscarTodos();
 
-			return this.buildResponse(listaProdutos);
+			retorno =  this.buildResponse(listaProdutos);
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
+		//Retorna a Response
+		return retorno;
+		
 		
 	}
 	
@@ -65,16 +87,24 @@ public class ProdutoRest extends UtilRest{
 	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscarAvancado(@QueryParam("modelo") String modelo){
-		
+		Response retorno = null;
 		try{
+			//Busca os produtos por modelo e armazena a lista retornada
 			List<Produto> listaProdutos = daoProduto.buscarPorModelo(modelo);
 			
-			return this.buildResponse(listaProdutos);
+			retorno =  this.buildResponse(listaProdutos);
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
+		//Retorna a Response
+		return retorno;
+		
 		
 	}
 	
@@ -82,20 +112,25 @@ public class ProdutoRest extends UtilRest{
 	@Path("/excluir/{id}")
 	@Consumes("application/*")
 	public Response excluir(@PathParam("id") int id){
-		
+		Response retorno = null;
 		try{
 			
-			Produto produto = daoProduto.buscarPorId(id);
-			daoProduto.excluir(produto);
+			daoProduto.excluir(id);
 			String msg = "Produto excluído com sucesso!";
 			
-			return this.buildResponse(msg);
+			retorno =  this.buildResponse(msg);
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
-
+		//Retorna a Response
+		return retorno;
+		
 	}
 	
 	@GET
@@ -103,16 +138,23 @@ public class ProdutoRest extends UtilRest{
 	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscarPorId(@PathParam("id") int id){
-		
+		Response retorno = null;
 		try{
 			
 			Produto produto = daoProduto.buscarPorId(id);
 			
-			return this.buildResponse(produto);
+			retorno =  this.buildResponse(produto);
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
+		//Retorna a Response
+		return retorno;
+		
 	}
 	
 	
@@ -120,6 +162,7 @@ public class ProdutoRest extends UtilRest{
 	@Path("/alterar")
 	@Consumes("application/*")
 	public Response alterar(String produtoParam){
+		Response retorno = null;
 		try{
 			Produto produto = new Gson().fromJson(produtoParam, Produto.class);
 
@@ -127,28 +170,43 @@ public class ProdutoRest extends UtilRest{
 
 			String msg = "Produto alterado com sucesso!";
 			
-			return this.buildResponse(msg);
+			retorno =  this.buildResponse(msg);
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
-	}//fecha o método alterar
+		//Retorna a Response
+		return retorno;
+		
+	}
 
 	@GET
 	@Path("/buscarParaVenda")
 	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscarParaVenda(@QueryParam("idMarca") int idMarca, @QueryParam("categoria") int categoria){
-		
+		Response retorno = null;
 		try{
+			//Busca todos os produtos para venda (ou seja, os produtos da marca e categoria selecionados em uma das linhas do mestre-detalhe)
 			List<Produto> listaProdutos = daoProduto.buscarParaVenda(idMarca, categoria);
 			
-			return this.buildResponse(listaProdutos);
+			retorno =  this.buildResponse(listaProdutos);
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
+		//Retorna a Response
+		return retorno;
+		
 	}
-	
+
 }//fecha a classe ProdutoRest
 

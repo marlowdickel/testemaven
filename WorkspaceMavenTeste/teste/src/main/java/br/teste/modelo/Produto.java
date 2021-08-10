@@ -2,8 +2,6 @@ package br.teste.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -39,9 +36,11 @@ public class Produto implements Serializable {
 	
 	private BigDecimal valor;
 	/*
+	 * Desnecessário relacionar com as compras em que esse produto esteve, por regra de negócio, 
+	 *mas esse seria o código caso fosse necessário saber todas as compras de um determinado produto
 	@OneToMany(mappedBy = "produto")
 	private List<ProdutoCompra> produtosComprados = new ArrayList<ProdutoCompra>();
-*/
+	 */
 	public int getId() {
 		return id;
 	}
@@ -78,12 +77,12 @@ public class Produto implements Serializable {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	/*
-	public List<ProdutoCompra> getProdutosComprados() {
-		return produtosComprados;
+
+	//Método para converter o número da categoria para texto
+	public void categoriaParaTexto() {
+		//se for 1, Geladeira. Se for 2, Freezer. Se tiver outra coisa, mantém o q tiver (que deve ser Geladeira ou Freezer)
+		this.setCategoria(this.getCategoria().equals("1") ? "Geladeira" : this.getCategoria().equals("2") ? "Freezer": this.getCategoria());
 	}
-	public void setProdutosComprados(List<ProdutoCompra> produtosComprados) {
-		this.produtosComprados = produtosComprados;
-	}*/
+	
 }
 

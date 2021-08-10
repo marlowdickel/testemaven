@@ -7,7 +7,6 @@
   <class>br.teste.modelo.Produto</class>
   <class>br.teste.modelo.Compra</class>
   <class>br.teste.modelo.ProdutoCompra</class>
-  <class>br.teste.modelo.id</class>
   <!-- <class>br.teste.modelo.ProdutoCompra</class>
   <class>br.teste.modelo.ProdutoCompraKey</class> -->
 

@@ -8,25 +8,38 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.teste.dao.GenericDAO;
+import br.teste.dao.MarcaDAO;
 import br.teste.modelo.Marca;
 
 @Path("marca")
 public class MarcaRest extends UtilRest{
 	
-	private GenericDAO<Marca> daoGenerico = new GenericDAO<Marca>(); 
+	private MarcaDAO daoMarca = new MarcaDAO(); 
+	
+	@Override
+	protected void fechaConexao() {
+		daoMarca.fechaConexao();
+	}
 	
 	@GET
 	@Path("/buscar")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response buscar(){
+		Response retorno = null;
 		try{
-			List<Marca> listaMarcas = daoGenerico.buscarTodos(Marca.class);
-			return this.buildResponse(listaMarcas);
+			List<Marca> listaMarcas = daoMarca.buscarTodos();
+			retorno =  this.buildResponse(listaMarcas);
 		}catch(Exception e){
 			e.printStackTrace();
-			return this.buildErrorResponse(e.getMessage());
+			//Constrói a Response e armazena na variável
+			retorno = this.buildErrorResponse(e.getMessage());
+		}finally {
+			//fecha a(s) conexão(ões) gerenciada(s)
+			this.fechaConexao();
 		}
+		//Retorna a Response
+		return retorno;
+		
 		
 	}
 

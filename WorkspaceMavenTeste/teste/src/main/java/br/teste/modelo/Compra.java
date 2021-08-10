@@ -1,21 +1,15 @@
 package br.teste.modelo;
-//https://thorben-janssen.com/hibernate-tip-many-to-many-association-with-additional-attributes/
+
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -32,19 +26,15 @@ public class Compra implements Serializable {
 	@Column(name="id")
 	private int id;
 	
-	//problemas com data!!! Modo inicial: import era do java.sql.Date
+	//Exemplo sobre como trabalhar com datas. Se atualizarmos o Java, provavelmente teria que ser diferente.
 	@Column
 	@Temporal(TemporalType.DATE)
 	private Date data;
-	/*
-	@Temporal(TemporalType.DATE)
-	private Calendar data;
-	*/
 	
 	@Column
 	private String fornecedor;
 	
-	@OneToMany(mappedBy = "compra") //atributo que vincula essa tabela à outra
+	@OneToMany(mappedBy = "compra") //mapeado pelo nome do atributo da outra classe do relacionamento
 	private List<ProdutoCompra> produtos = new ArrayList<ProdutoCompra>();
 
 	public int getId() {
@@ -72,11 +62,15 @@ public class Compra implements Serializable {
 		this.produtos = produtos;
 	}
 	
+	//Método que prepara uma compra pra exibição
 	public void formatarParaExibir() {
+		//Para cada produto relacionado com aquela compra na tabela N:N
 		for (ProdutoCompra produtocompra: this.getProdutos()) {
+			//Apaga a compra dele, já que temos todos os dados na própria conta, evitando assim problemas de recursividade no Json e tráfego desnecessário
 			produtocompra.setCompra(null);
-			System.out.println("cat 1:"+produtocompra.getProduto().getCategoria());
-			produtocompra.getProduto().setCategoria(produtocompra.getProduto().getCategoria().equals("1") ? "Geladeira" : produtocompra.getProduto().getCategoria().equals("2") ? "Freezer" : produtocompra.getProduto().getCategoria());
+			//System.out.println("cat 1:"+produtocompra.getProduto().getCategoria());
+			//Chama o método que altera o número da categoria que está no BD para o texto do nome dela
+			produtocompra.getProduto().categoriaParaTexto();
 		}
 	}
 }
